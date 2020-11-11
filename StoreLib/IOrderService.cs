@@ -3,7 +3,7 @@ using StoreDB.Models;
 
 namespace StoreLib
 {
-    interface IOrderService
+    public interface IOrderService
     {
         List<Order> GetCustomerOrdersByCostAscend(int customerId);
         List<Order> GetCustomerOrdersByCostDescend(int customerId);

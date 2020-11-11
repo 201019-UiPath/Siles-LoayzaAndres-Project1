@@ -5,7 +5,7 @@ using StoreDB.Models;
 
 namespace StoreLib
 {
-    class OrderService : IOrderService
+    public class OrderService : IOrderService
     {
         private IOrderRepo repo;
 

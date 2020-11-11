@@ -6,7 +6,7 @@ using StoreDB.Models;
 
 namespace StoreLib
 {
-    class ItemService
+    public class ItemService : IItemService
     {
         IItemRepo repo;
 
@@ -30,7 +30,7 @@ namespace StoreLib
 
         public void AddToInvItem(int locationId, int productId, int addend)
         {
-            repo.GetInvItem(locationId, productId).Quantity += addend;
+            GetInvItem(locationId, productId).Quantity += addend;
         }
 
         public InvItem GetInvItem(int locationId, int productId)

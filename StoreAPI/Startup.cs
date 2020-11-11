@@ -31,16 +31,20 @@ namespace StoreAPI
             services.AddControllers();
             services.AddDbContext<StoreContext>(options => options.UseNpgsql(Configuration.GetConnectionString("StoreDB")));
             //repositories
-            services.AddScoped<IStoreRepo, DBRepo>();
-            services.AddScoped<ICustomerRepo, DBRepo>();
-            services.AddScoped<ILocationRepo, DBRepo>();
-            services.AddScoped<ICartRepo, DBRepo>();
-            services.AddScoped<IAdminRepo, DBRepo>();
+            //services.AddScoped<IStoreRepo, DBRepo>();
+            services.AddScoped<IItemRepo, DBRepo>();
+            //services.AddScoped<ICustomerRepo, DBRepo>();
+            //services.AddScoped<ILocationRepo, DBRepo>();
+            //services.AddScoped<ICartRepo, DBRepo>();
+            //services.AddScoped<IOrderRepo, DBRepo>();
+            //services.AddScoped<IAdminRepo, DBRepo>();
             //business logic
-            services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<ILocationService, LocationService>();
-            services.AddScoped<ICartService, CartService>();
-            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IItemService, ItemService>();
+            //services.AddScoped<ICustomerService, CustomerService>();
+            //services.AddScoped<ILocationService, LocationService>();
+            //services.AddScoped<ICartService, CartService>();
+            //services.AddScoped<IAdminService, AdminService>();
+            //services.AddScoped<IOrderService, OrderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
