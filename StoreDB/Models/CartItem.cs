@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StoreDB.Models
 {
@@ -9,15 +10,8 @@ namespace StoreDB.Models
         /// <summary>
         /// ID for the Cart associated with this CartItem.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("CartId")]
         public int CartId {get; set;}
-        public CartItem() {}
-
-        public CartItem(Product product, int quantity)
-        {
-            this.ProductId = product.Id;
-            this.Product = product;
-            this.Quantity = quantity;
-        }
+        public Cart Cart {get; set;}
     }
 }

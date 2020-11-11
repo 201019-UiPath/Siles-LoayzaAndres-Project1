@@ -31,7 +31,7 @@ namespace StoreAPI
             services.AddControllers();
             services.AddDbContext<StoreContext>(options => options.UseNpgsql(Configuration.GetConnectionString("StoreDB")));
             //repositories
-            services.AddScoped<IRepo, DBRepo>();
+            services.AddScoped<IStoreRepo, DBRepo>();
             services.AddScoped<ICustomerRepo, DBRepo>();
             services.AddScoped<ILocationRepo, DBRepo>();
             services.AddScoped<ICartRepo, DBRepo>();

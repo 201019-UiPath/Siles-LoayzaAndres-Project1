@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace StoreDB.Models
 {
     /// <summary>
@@ -8,16 +10,8 @@ namespace StoreDB.Models
         /// <summary>
         /// ID for the Order associated with this OrderItem.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("OrderId")]
         public int OrderId {get; set;}
-
-        public OrderItem() {}
-
-        public OrderItem(Product product, int quantity)
-        {
-            this.ProductId = product.Id;
-            this.Product = product;
-            this.Quantity = quantity;
-        }
+        public Order Order {get; set;}
     }
 }

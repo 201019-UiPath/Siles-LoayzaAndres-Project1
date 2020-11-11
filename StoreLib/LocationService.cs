@@ -21,93 +21,15 @@ namespace StoreLib
             this.Location = location;
         }
 
-        public void AddNewProductToInventory(InvItem invItem)
+        public void AddLocation(Location location)
         {
-            invItem.LocationId = Location.Id;
-            if (!HasProduct(invItem.ProductId))
-            {
-                repo.AddInvItem(invItem);
-            }
-            else
-            {
-                System.Console.WriteLine("Error! Product already exists!");
-            }
+            repo.AddLocation(location);
         }
 
-        public List<InvItem> GetInventory()
+        public List<Location> GetLocations()
         {
-            return repo.GetInventory(Location.Id);
+            return repo.GetLocations();
         }
 
-        public void WriteInventory()
-        {
-            List<InvItem> inventory = GetInventory();
-            int i = 0;
-            foreach (var item in inventory)
-            {
-                Console.Write($"[{i}] ");
-                item.Write();
-                i++;
-            }
-        }
-
-        /// <summary>
-        /// Returns true if the given Product exists already in this Location's
-        /// Inventory. Iterates through Inventory and compares the Product in
-        /// each InvItem with the given Product using the Equals method.
-        /// </summary>
-        /// <param name="product"></param>
-        /// <returns>true if given Product is in this Inventory</returns>
-        public bool HasProduct(int productId)
-        {
-            List<InvItem> inventory = repo.GetInventory(Location.Id);
-            foreach (var invItem in inventory)
-            {
-                if (invItem.Product.Id == productId)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void AddToInvItem(int productId, int quantityAdded)
-        {
-            repo.AddToInvItemQuantity(Location.Id, productId, quantityAdded);
-        }
-
-        private void WriteOrders(List<Order> orders)
-        {
-            foreach (Order o in orders)
-            {
-                o.Items = repo.GetOrderItems(o.Id);
-                o.Write();
-            }
-            Console.WriteLine($"{orders.Count} orders found.");
-        }
-
-        public void WriteOrdersByDateAscend()
-        {
-            List<Order> orders = repo.GetOrdersAscend((x => x.LocationId == Location.Id), (x => x.DateTime));
-            WriteOrders(orders);
-        }
-
-        public void WriteOrdersByDateDescend()
-        {
-            List<Order> orders = repo.GetOrdersDescend((x => x.LocationId == Location.Id), (x => x.DateTime));
-            WriteOrders(orders);
-        }
-
-        public void WriteOrdersByCostAscend()
-        {
-            List<Order> orders = repo.GetOrdersAscend((x => x.LocationId == Location.Id), (x => x.Cost));
-            WriteOrders(orders);
-        }
-
-        public void WriteOrdersByCostDescend()
-        {
-            List<Order> orders = repo.GetOrdersDescend((x => x.LocationId == Location.Id), (x => x.Cost));
-            WriteOrders(orders);
-        }
     }
 }

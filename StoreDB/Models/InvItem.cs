@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace StoreDB.Models
 {
     /// <summary>
@@ -8,16 +10,8 @@ namespace StoreDB.Models
         /// <summary>
         /// ID for the Location associated with this InvItem.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("LocationId")]
         public int LocationId {get; set;}
-
-        public InvItem() {}
-        
-        public InvItem(Product product, int quantity)
-        {
-            ProductId = product.Id;
-            Product = product;
-            Quantity = quantity;
-        }
+        public Location Location {get; set;}
     }
 }

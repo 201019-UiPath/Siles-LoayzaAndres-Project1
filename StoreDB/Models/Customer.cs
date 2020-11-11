@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace StoreDB.Models
 {
@@ -12,28 +13,28 @@ namespace StoreDB.Models
         /// <summary>
         /// Unique ID. Primary key in the database.
         /// </summary>
-        /// <value></value>
+        [Key]
         public int Id {get; set;}
+
         /// <summary>
         /// Username for this Customer. Should be unique.
         /// </summary>
-        /// <value></value>
+        [Required]
         public string UserName {get; set;}
+
+        [Required]
+        public string Password { get; set; }
+
         /// <summary>
         /// Shipping address for this Customer.
         /// </summary>
-        /// <value></value>
         public Address Address {get; set;}
+
         /// <summary>
         /// List of Orders for this Customer. Represents this Customer's
         /// order history.
         /// </summary>
         /// <value></value>
         public List<Order> Orders {get; set;}
-
-        public Customer()
-        {
-            Orders = new List<Order>();
-        }
     }
 }

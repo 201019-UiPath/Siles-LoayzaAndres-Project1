@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace StoreDB.Models
 {
     /// <summary>
@@ -10,7 +12,7 @@ namespace StoreDB.Models
         /// <summary>
         /// ID for the Product associated with this Item.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("ProductId")]
         public int ProductId {get; set;}
         /// <summary>
         /// The Product associated with this Item.
@@ -18,15 +20,14 @@ namespace StoreDB.Models
         /// <value></value>
         public Product Product {get; set;}
         /// <summary>
+        /// Price in USD for this Product.
+        /// </summary>
+        private decimal price;
+        public decimal Price { get { return price; } set { price = decimal.Round(value, 2); } }
+        /// <summary>
         /// The amount of the Product contained in this Item.
         /// </summary>
         /// <value></value>
         public int Quantity {get; set;}
-        
-        public void Write()
-        {
-            Product.Write();
-            System.Console.WriteLine($"    Quantity: {Quantity}");
-        }
     }
 }

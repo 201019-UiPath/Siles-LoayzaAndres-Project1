@@ -26,8 +26,7 @@ namespace StoreLib
             item.CartId = Cart.Id;
             if (repo.HasCartItem(item))
             {
-                item.Quantity += repo.GetCartItem(Cart.Id, item.ProductId).Quantity;
-                repo.UpdateCartItemQuantity(item);
+                repo.GetCartItem(Cart.Id, item.ProductId).Quantity += item.Quantity;
             }
             else
             {
@@ -58,16 +57,18 @@ namespace StoreLib
 
         public Order PlaceOrder()
         {
-            Order order = new Order();
-            order.LocationId = Location.Id;
-            order.CustomerId = Customer.Id;
-            order.LocationAddress = Location.Address;
-            order.CustomerAddress = Customer.Address;
-            order.DateTime = DateTime.Now;
-            order.Items = new List<OrderItem>();
+            Order order = new Order()
+            {
+                LocationId = Location.Id,
+                CustomerId = Customer.Id,
+                ReturnAddress = Location.Address,
+                DestinationAddress = Customer.Address,
+                CreationTime = DateTime.Now,
+                Items = new List<OrderItem>(),
+            };
             foreach (CartItem c in GetCartItems())
             {
-                order.Items.Add(new OrderItem(c.Product, c.Quantity));
+                order.Items.Add(new OrderItem(){Product = c.Product, Quantity = c.Quantity});
             }
             order.Cost = Cart.Cost;
 
@@ -79,20 +80,6 @@ namespace StoreLib
         public void RemoveCartItem(CartItem cartItem)
         {
             repo.RemoveCartItem(cartItem);
-        }
-
-        public void WriteCart()
-        {
-            List<CartItem> items = GetCartItems();
-            Console.WriteLine($"{items.Count} products in your cart.");
-            int i = 0;
-            foreach (var item in items)
-            {
-                Console.Write($"[{i}] ");
-                item.Write();
-                i++;
-            }
-            Console.WriteLine($"Subtotal: ${Cart.Cost}");
         }
     }
 }

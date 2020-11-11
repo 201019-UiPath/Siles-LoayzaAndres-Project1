@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace StoreDB.Models
 {
     /// <summary>
@@ -8,17 +10,17 @@ namespace StoreDB.Models
         /// <summary>
         /// Unique ID. Primary key in the database.
         /// </summary>
-        /// <value></value>
+        [Key]
         public int Id {get; set;}
         /// <summary>
         /// Street address.
         /// </summary>
-        /// <value></value>
+        [Required]
         public string Street {get; set;}
         /// <summary>
         /// City.
         /// </summary>
-        /// <value></value>
+        [Required]
         public string City {get; set;}
         /// <summary>
         /// Zip code.
@@ -33,19 +35,8 @@ namespace StoreDB.Models
         /// <summary>
         /// Country or nation.
         /// </summary>
-        /// <value></value>
+        [Required]
         public string Country {get; set;}
-
-        public Address(){}
-
-        public Address(string street, string city, string state, int zip, string country)
-        {
-            this.Street = street;
-            this.City = city;
-            this.State = state;
-            this.Zip = zip;
-            this.Country = country;
-        }
 
         public override string ToString()
         {

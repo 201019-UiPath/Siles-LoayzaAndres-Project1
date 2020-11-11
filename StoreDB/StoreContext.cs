@@ -21,6 +21,7 @@ namespace StoreDB
 
         public StoreContext(DbContextOptions<StoreContext> options) : base(options){}
 
+        ///*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if( !optionsBuilder.IsConfigured )
@@ -33,7 +34,7 @@ namespace StoreDB
                 var connectionString = configuration.GetConnectionString("StoreDB"); //refers to the specific string in appsettings.json
                 optionsBuilder.UseNpgsql(connectionString); //connects the database
             }
-        }
+        }//*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

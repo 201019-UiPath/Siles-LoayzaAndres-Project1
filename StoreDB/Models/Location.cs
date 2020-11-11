@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace StoreDB.Models
 {
@@ -11,12 +12,13 @@ namespace StoreDB.Models
         /// <summary>
         /// Unique ID. Primary key in the database.
         /// </summary>
-        /// <value></value>
+        [Key]
         public int Id {get; set;}
 
         /// <summary>
         /// Name of location used in UI.
         /// </summary>
+        [Required]
         public string Name {get; set;}
 
         /// <summary>
@@ -27,19 +29,11 @@ namespace StoreDB.Models
         /// <summary>
         /// List of all available products at this store Location.
         /// </summary>
-        /// <value></value>
         public List<InvItem> Inventory {get; set;}
         /// <summary>
         /// List of all orders processed at this store Location.
         /// </summary>
-        /// <value></value>
         public List<Order> Orders {get; set;}
-
-        public Location()
-        {
-            Inventory = new List<InvItem>();
-            Orders = new List<Order>();
-        }
 
     }
 }

@@ -2,9 +2,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,csharp,aspnetcore,dotnetcore
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,visualstudiocode,csharp,aspnetcore,dotnetcore
 
-# Database connection
+# EF Core 
 appsettings.json
 appsettings.Development.json
+Migrations/
 
 ### ASPNETCore ###
 ## Ignore Visual Studio temporary files, build results, and

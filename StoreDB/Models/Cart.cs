@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StoreDB.Models
 {
@@ -10,21 +12,20 @@ namespace StoreDB.Models
     /// </summary>
     public class Cart
     {
-        /// <summary>
-        /// Unique ID. Primary key in the database.
-        /// </summary>
-        /// <value></value>
+        [Key]
         public int Id {get; set;}
         /// <summary>
         /// ID for the Location associated with this Cart.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("LocationId")]
         public int LocationId {get; set;}
+        public Location Location {get; set;}
         /// <summary>
         /// ID for the Customer associated with this Cart.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("CustomerId")]
         public int CustomerId {get; set;}
+        public Customer Customer {get; set;}
         /// <summary>
         /// List of products contained in this Cart.
         /// </summary>
@@ -44,17 +45,12 @@ namespace StoreDB.Models
             get
             {
                 decimal total = 0;
-                foreach(var invItem in Items)
+                foreach(var item in Items)
                 {
-                    total += (invItem.Quantity * invItem.Product.Price);
+                    total += (item.Quantity * item.Price);
                 }
                 return total;
             }
-        }
-
-        public Cart()
-        {
-            Items = new List<CartItem>();
         }
     }
 }

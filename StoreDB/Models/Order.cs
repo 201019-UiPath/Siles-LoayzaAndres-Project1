@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StoreDB.Models
 {
@@ -9,62 +10,38 @@ namespace StoreDB.Models
     /// </summary>
     public class Order
     {
-        /// <summary>
-        /// Unique ID. Primary key for the database.
-        /// </summary>
-        /// <value></value>
         public int Id {get; set;}
         /// <summary>
         /// ID for the Location associated with this Order.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("LocationId")]
         public int LocationId {get; set;}
+        public Location Location {get; set;}
         /// <summary>
         /// ID for the Customer associated with this Order.
         /// </summary>
-        /// <value></value>
+        [ForeignKey("CustomerId")]
         public int CustomerId {get; set;}
+        public Customer Customer {get; set;}
         /// <summary>
         /// Address for the Location associated with this Order.
         /// </summary>
-        /// <value></value>
-        public Address LocationAddress {get; set;}
+        public Address ReturnAddress {get; set;}
         /// <summary>
         /// Address for the Customer associated with this Order.
         /// </summary>
-        /// <value></value>
-        public Address CustomerAddress {get; set;}
+        public Address DestinationAddress {get; set;}
         /// <summary>
         /// Date and time that this Order was placed.
         /// </summary>
-        /// <value></value>
-        public DateTime DateTime {get; set;}
+        public DateTime CreationTime {get; set;}
         /// <summary>
         /// List of products that this Order contains.
         /// </summary>
-        /// <value></value>
         public List<OrderItem> Items {get; set;}
         /// <summary>
         /// Total cost for this Order in USD.
         /// </summary>
-        /// <value></value>
         public decimal Cost {get; set;}
-
-        public Order()
-        {
-            Items = new List<OrderItem>();
-        }
-
-        public void Write()
-        {
-            Console.WriteLine($"Order ID: {Id}");
-            Console.WriteLine($"Date: {DateTime.ToShortDateString()}");
-            Console.WriteLine($"Time: {DateTime.ToShortTimeString()}");
-            foreach(OrderItem item in Items)
-            {
-                Console.WriteLine($"    {item.Quantity} of {item.Product.Name}");
-            }
-            Console.WriteLine($"    Total Cost: ${Cost}");
-        }
     }
 }

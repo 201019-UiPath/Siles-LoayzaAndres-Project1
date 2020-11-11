@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 using StoreDB.Models;
 
@@ -10,7 +11,7 @@ namespace StoreDB
     /// Implementation of IRepo methods using a database management system.
     /// Uses EF Core and DbContext to store and access data for the store.
     /// </summary>
-    public class DBRepo : IRepo
+    public class DBRepo : IStoreRepo
     {
         StoreContext context;
 
@@ -43,12 +44,6 @@ namespace StoreDB
             context.SaveChanges();
         }
 
-        public void AddToInvItemQuantity(int locationId, int productId, int quantityAdded)
-        {
-            context.InvItems.Single(x => x.LocationId==locationId && x.ProductId==productId).Quantity += quantityAdded;
-            context.SaveChanges();
-        }
-
         public void EmptyCart(int cartId)
         {
             context.Carts.Include("Items").Single(x => x.Id==cartId).Items.Clear();
@@ -70,23 +65,14 @@ namespace StoreDB
             return context.CartItems.Include("Product").Where(x => x.CartId==cartId).ToList();
         }
 
-        //TODO: Remove business logic
-        public Customer GetDefaultCustomer()
+        public InvItem GetInvItem(int locationId, int productId)
         {
-            if (!context.Customers.Any(x => true))
-            {
-                Customer customer = new Customer();
-                customer.UserName = "Andres";
-                customer.Address = new Address("123 Main Street", "Charles Town", "WV", 12345, "USA");
-                context.Customers.Add(customer);
-                context.SaveChanges();
-            }
-            return context.Customers.First(x => true);
+            return context.InvItems.Include("Product").Single(x => x.LocationId == locationId && x.ProductId == productId);
         }
 
-        public List<InvItem> GetInventory(int locationId)
+        public List<InvItem> GetInvItemsByLocation(int locationId)
         {
-            return context.InvItems.Include("Product").Where(x => x.LocationId==locationId).ToList();
+            return context.InvItems.Include("Product").Where(x => x.LocationId == locationId).ToList();
         }
 
         public List<Location> GetLocations()
@@ -133,7 +119,7 @@ namespace StoreDB
                 {
                     foreach(CartItem item in GetCartItems(cartId))
                     {
-                        ReduceInventory(locationId, item.ProductId, item.Quantity);
+                        GetInvItem(locationId, item.ProductId).Quantity -= item.Quantity;
                     }
                     context.SaveChanges();
                     EmptyCart(cartId);
@@ -153,18 +139,6 @@ namespace StoreDB
         public void RemoveCartItem(CartItem item)
         {
             context.CartItems.Remove(item);
-            context.SaveChanges();
-        }
-
-        public void ReduceInventory(int locationId, int productId, int quantity)
-        {
-            context.InvItems.Single(x => x.LocationId==locationId && x.Product.Id==productId).Quantity -= quantity;
-            context.SaveChanges();
-        }
-
-        public void UpdateCartItemQuantity(CartItem item)
-        {
-            context.CartItems.Single(x => x.CartId==item.CartId && x.ProductId==item.ProductId).Quantity = item.Quantity;
             context.SaveChanges();
         }
     }

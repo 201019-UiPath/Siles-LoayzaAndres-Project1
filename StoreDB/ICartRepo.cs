@@ -15,6 +15,5 @@ namespace StoreDB
         bool HasCart(int customerId, int locationId);
         bool HasCartItem(CartItem item);
         void PlaceOrderTransaction(int locationId, int cartId, Order order);
-        void UpdateCartItemQuantity(CartItem item);
     }
 }

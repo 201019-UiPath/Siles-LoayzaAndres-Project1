@@ -15,7 +15,6 @@ namespace StoreTest
         {
             Id = 1,
             Name = "Apple",
-            Price = 1.29M,
             Description = "This is a test apple."
         };
 
@@ -100,7 +99,7 @@ namespace StoreTest
             //Act
             using var assertContext = new StoreContext(options);
             repo = new DBRepo(assertContext);
-            var result = repo.GetInventory(1); //get from locationId=1
+            var result = repo.GetInvItemsByLocation(1); //get from locationId=1
 
             //Assert
             Assert.NotNull(result);
@@ -170,7 +169,7 @@ namespace StoreTest
 
             //Act
             repo = new DBRepo(testContext);
-            repo.AddToInvItemQuantity(1, 1, 20); //adding to productId=1, locationId=1, quantity=20
+            repo.GetInvItem(1, 1).Quantity += 20; //adding to productId=1, locationId=1, quantity=20
             
             //Arrange
             using var assertContext = new StoreContext(options);
@@ -188,9 +187,8 @@ namespace StoreTest
             testContext.SaveChanges();
 
             //Act
-            CartItem addItem = new CartItem(){ProductId=1, CartId=1, Quantity=50}; //same composite key
             repo = new DBRepo(testContext);
-            repo.UpdateCartItemQuantity(addItem); //update to 50
+            repo.GetCartItem(productId: 1, cartId: 1).Quantity = 50; //update to 50
             
             //Arrange
             using var assertContext = new StoreContext(options);
@@ -203,7 +201,7 @@ namespace StoreTest
             //Arrange
             var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("EmptyCartShouldEmpty").Options;
             using var testContext = new StoreContext(options);
-            testContext.Carts.Add(new Cart(){Id=1, LocationId=1, CustomerId=1}); //cart must exist
+            testContext.Carts.Add(new Cart(){LocationId=1, CustomerId=1}); //cart must exist
             List<CartItem> items = new List<CartItem>()
             {
                 new CartItem() {ProductId=1, CartId=1, Quantity=5},
@@ -236,7 +234,7 @@ namespace StoreTest
             //Act
             using var assertContext = new StoreContext(options);
             repo = new DBRepo(assertContext);
-            repo.ReduceInventory(1, 1, 20); //reduce by 20
+            repo.GetInvItem(1, 1).Quantity -= 20; //reduce by 20
 
             //Assert
             Assert.Equal(30, assertContext.InvItems.First().Quantity); //50-20=30
