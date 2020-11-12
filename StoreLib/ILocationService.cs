@@ -5,7 +5,9 @@ namespace StoreLib
 {
     public interface ILocationService
     {
-        void AddLocation(Location location);
         List<Location> GetLocations();
+        List<InvItem> GetInventory(int locationId);
+        InvItem GetInvItem(int locationId, int productId);
+        bool LocationHasItem(int locationId, int productId);
     }
 }

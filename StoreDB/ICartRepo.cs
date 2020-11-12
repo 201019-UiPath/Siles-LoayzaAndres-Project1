@@ -10,6 +10,7 @@ namespace StoreDB
         void RemoveCartItem(CartItem item);
         void EmptyCart(int cartId);
         Cart GetCart(int customerId, int locationId);
+        Cart GetCart(int cartId);
         CartItem GetCartItem(int cartId, int productId);
         List<CartItem> GetCartItems(int cartId);
         bool HasCart(int customerId, int locationId);

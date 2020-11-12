@@ -6,9 +6,11 @@ namespace StoreLib
     public interface ICartService
     {
         void AddToCart(CartItem item);
-        void EmptyCart();
-        List<CartItem> GetCartItems();
-        Order PlaceOrder();
+        void EmptyCart(int cartId);
+        Cart GetCart(int customerId, int locationId);
+        List<CartItem> GetCartItems(int cartId);
+        decimal GetCost(int cartId);
+        Order PlaceOrder(int customerId, int locationId, Address returnAdd, Address destAdd);
         void RemoveCartItem(CartItem cartItem);
     }
 }

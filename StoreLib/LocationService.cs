@@ -13,22 +13,38 @@ namespace StoreLib
     public class LocationService : ILocationService
     {
         private ILocationRepo repo;
-        public Location Location { get; private set; }
 
-        public LocationService(ILocationRepo repo, Location location)
+        public LocationService(ILocationRepo repo)
         {
             this.repo = repo;
-            this.Location = location;
-        }
-
-        public void AddLocation(Location location)
-        {
-            repo.AddLocation(location);
         }
 
         public List<Location> GetLocations()
         {
             return repo.GetLocations();
+        }
+
+        public InvItem GetInvItem(int locationId, int productId)
+        {
+            return repo.GetInvItem(locationId, productId);
+        }
+
+        public List<InvItem> GetInventory(int locationId)
+        {
+            return repo.GetInvItemsByLocation(locationId);
+        }
+
+        public bool LocationHasItem(int locationId, int productId)
+        {
+            List<InvItem> inventory = repo.GetInvItemsByLocation(locationId);
+            foreach (var invItem in inventory)
+            {
+                if (invItem.Product.Id == productId)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
     }

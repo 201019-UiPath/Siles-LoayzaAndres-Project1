@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace StoreAPI
 {
@@ -13,6 +14,10 @@ namespace StoreAPI
     {
         public static void Main(string[] args)
         {
+            //setup logger
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo
+                                                               .File("Logs\\BL_Log.txt")
+                                                               .CreateLogger();
             CreateHostBuilder(args).Build().Run();
         }
 

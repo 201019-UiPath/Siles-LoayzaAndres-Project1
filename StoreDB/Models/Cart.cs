@@ -31,26 +31,5 @@ namespace StoreDB.Models
         /// </summary>
         /// <value></value>
         public List<CartItem> Items {get; set;}
-        /// <summary>
-        /// Number of unique products in this Cart. Does not count quantity.
-        /// </summary>
-        /// <value></value>
-        public int Count { get{return Items.Count;} }
-        /// <summary>
-        /// Total cost of all items in this Cart. Calculated in the getter.
-        /// </summary>
-        /// <value></value>
-        public decimal Cost
-        {
-            get
-            {
-                decimal total = 0;
-                foreach(var item in Items)
-                {
-                    total += (item.Quantity * item.Price);
-                }
-                return total;
-            }
-        }
     }
 }

@@ -7,7 +7,8 @@ namespace StoreDB
     
     public interface ILocationRepo
     {
-        void AddLocation(Location location);
         List<Location> GetLocations();
+        InvItem GetInvItem(int locationId, int productId);
+        List<InvItem> GetInvItemsByLocation(int locationId);
     }
 }

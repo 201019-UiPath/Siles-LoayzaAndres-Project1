@@ -26,6 +26,12 @@ namespace StoreDB
             context.SaveChanges();
         }
 
+        public void AddCustomer(Customer customer)
+        {
+            context.Customers.Add(customer);
+            context.SaveChanges();
+        }
+
         public void AddLocation(Location location)
         {
             context.Locations.Add(location);
@@ -55,6 +61,11 @@ namespace StoreDB
             return context.Carts.Single(x => x.CustomerId == customerId && x.LocationId == locationId);
         }
 
+        public Cart GetCart(int cartId)
+        {
+            return context.Carts.Single(x => x.Id == cartId);
+        }
+
         public CartItem GetCartItem(int cartId, int productId)
         {
             return context.CartItems.Single(x => x.CartId==cartId && x.ProductId==productId);
@@ -65,9 +76,14 @@ namespace StoreDB
             return context.CartItems.Include("Product").Where(x => x.CartId==cartId).ToList();
         }
 
+        public Customer GetCustomer(string username)
+        {
+            return context.Customers.Single(x => x.UserName==username);
+        }
+
         public InvItem GetInvItem(int locationId, int productId)
         {
-            return context.InvItems.Include("Product").Single(x => x.LocationId == locationId && x.ProductId == productId);
+            return context.InvItems.Include("Product").Single(x => x.LocationId==locationId && x.ProductId==productId);
         }
 
         public List<InvItem> GetInvItemsByLocation(int locationId)
@@ -109,6 +125,11 @@ namespace StoreDB
         public bool HasCartItem(CartItem item)
         {
             return context.CartItems.Any(x => x.CartId==item.CartId && x.ProductId==item.ProductId);
+        }
+
+        public bool HasCustomer(string username)
+        {
+            return context.Customers.Any(x => x.UserName==username);
         }
 
         public void PlaceOrderTransaction(int locationId, int cartId, Order order)
