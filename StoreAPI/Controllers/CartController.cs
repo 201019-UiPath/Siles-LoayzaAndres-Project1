@@ -32,7 +32,7 @@ namespace StoreAPI.Controllers
             catch (Exception e)
             {
                 Log.Error($"Could not get cart. {e.Message}");
-                return NotFound();
+                return NotFound(e);
             }
         }
 
@@ -44,11 +44,12 @@ namespace StoreAPI.Controllers
                 _cartService.AddToCart(cartItem);
                 return CreatedAtAction("AddToCart", cartItem);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
+
 
         [HttpDelete("Empty")]
         public IActionResult EmptyCart(int cartId)
@@ -89,6 +90,20 @@ namespace StoreAPI.Controllers
             catch (Exception)
             {
                 return NotFound();
+            }
+        }
+
+        [HttpPost("PlaceOrder")]
+        public IActionResult PlaceOrder(Order order)
+        {
+            try
+            {
+                _cartService.PlaceOrder(order);
+                return CreatedAtAction("PlaceOrder", order);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
             }
         }
     }

@@ -18,6 +18,8 @@ namespace StoreAPI
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,6 +30,15 @@ namespace StoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder => {
+                        builder.WithOrigins("*")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+            });
+
             services.AddControllers();
             services.AddDbContext<StoreContext>(options => options.UseNpgsql(Configuration.GetConnectionString("StoreDB")));
             //repositories
@@ -35,12 +46,12 @@ namespace StoreAPI
             services.AddScoped<ICustomerRepo, DBRepo>();
             services.AddScoped<ILocationRepo, DBRepo>();
             services.AddScoped<ICartRepo, DBRepo>();
-            //services.AddScoped<IAdminRepo, DBRepo>();
+            services.AddScoped<IAdminRepo, DBRepo>();
             //business logic
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ICartService, CartService>();
-            //services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAdminService, AdminService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +65,8 @@ namespace StoreAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

@@ -23,7 +23,7 @@ namespace StoreAPI.Controllers
 
         [HttpGet("signin")]
         [Produces("application/json")]
-        public IActionResult signIn(string username, string password)
+        public IActionResult SignIn(string username, string password)
         {
             try
             {
@@ -37,16 +37,37 @@ namespace StoreAPI.Controllers
         }
 
         [HttpPost("signup")]
-        public IActionResult signUp(Customer customer)
+        public IActionResult SignUp(Customer customer)
         {
             try
             {
                 _customerService.SignUpNewCustomer(customer);
                 return CreatedAtAction("signUp", customer);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet("GetOrders")]
+        [Produces("application/json")]
+        public IActionResult GetOrders(int customerId, string orderby="date", string orderdir="desc")
+        {
+            try
+            {
+                if (orderby=="cost" && orderdir=="asc")
+                { return Ok(_customerService.GetOrdersByCostAscend(customerId));}
+                else if (orderby=="cost" && orderdir=="desc")
+                { return Ok(_customerService.GetOrdersByCostDescend(customerId)); }
+                else if (orderby=="date" && orderdir=="asc")
+                { return Ok(_customerService.GetOrdersByDateAscend(customerId)); }
+                else //default to order by date descending
+                { return Ok(_customerService.GetOrdersByDateDescend(customerId)); } 
+            }
+            catch (Exception e)
+            {
+                return NotFound(e);
             }
         }
     }

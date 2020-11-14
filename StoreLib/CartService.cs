@@ -72,6 +72,29 @@ namespace StoreLib
             return total;
         }
 
+        /// <summary>
+        /// Assumes the specified Order has LocationId, CustomerId, 
+        /// ReturnAddress, and DestinationAddress defined.
+        /// </summary>
+        public void PlaceOrder(Order order)
+        {
+            Cart cart = repo.GetCart(order.CustomerId, order.LocationId);
+            order.CreationTime = DateTime.Now;
+            order.Items = new List<OrderItem>();
+
+            foreach (CartItem c in GetCartItems(cart.Id))
+            {
+                order.Items.Add(new OrderItem()
+                {
+                    Product = c.Product,
+                    Quantity = c.Quantity,
+                    Price = c.Price
+                });
+            }
+            order.Cost = GetCost(cart.Id);
+            repo.PlaceOrderTransaction(order.LocationId, cart.Id, order);
+        }
+
         public Order PlaceOrder(int customerId, int locationId, Address returnAdd, Address destAdd)
         {
             Cart cart = repo.GetCart(customerId, locationId);
