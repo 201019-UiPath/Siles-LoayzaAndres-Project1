@@ -6,5 +6,15 @@
     <h1 class="display-4">User Account</h1>
 
     <p>Welcome!</p>
-    <p>Currently logged in as @ViewData["Username"]</p>
+    @if ((bool)ViewData["IsLoggedIn"]) 
+    { 
+        <p>Currently logged in as @ViewData["Username"]</p> 
+    }
+    else
+    {
+        <p>You are logged out.</p>
+    }
+
+
+    @Html.ActionLink("Logout", "Logout")
 </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,25 @@ namespace StoreWebUI.Controllers
     [Route("Shop")]
     public class ShopController : Controller
     {
+        public const string SessionKeyLocation = "CurrentLocation";
         private readonly string apiDomainName = "https://localhost:44362/";
 
+        [Route("Index")]
         public IActionResult Index()
+        {
+            if (HttpContext.Session.Get(SessionKeyLocation)!=null)
+            {
+                var location = JsonSerializer.Deserialize<Location>(HttpContext.Session.Get(SessionKeyLocation));
+                return RedirectToAction("GetInventory", location);
+            }
+            else
+            {
+                return RedirectToAction("SelectLocation");
+            }
+        }
+
+        [Route("SelectLocation")]
+        public IActionResult SelectLocation()
         {
             string url = $"{apiDomainName}Location/GetAllLocations";
             using (var client = new HttpClient())
@@ -38,13 +55,14 @@ namespace StoreWebUI.Controllers
         }
 
         [Route("location")]
-        public IActionResult GetInventory(int locationId, string locationName)
+        public IActionResult GetInventory(Location location)
         {
+            
             string url = $"{apiDomainName}Location/GetInventory";
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(url);
-                var response = client.GetAsync($"?locationId={locationId}");
+                var response = client.GetAsync($"?locationId={location.Id}");
                 response.Wait();
 
                 var result = response.Result;
@@ -54,7 +72,9 @@ namespace StoreWebUI.Controllers
                     readTask.Wait();
 
                     List<InvItem> inventory = readTask.Result;
-                    ViewData["LocationName"] = locationName;
+
+                    HttpContext.Session.SetString(SessionKeyLocation, JsonSerializer.Serialize(location));
+                    ViewData["LocationName"] = location.Name;
                     return View(inventory);
                 }
             }
@@ -78,6 +98,7 @@ namespace StoreWebUI.Controllers
                     readTask.Wait();
 
                     InvItem item = readTask.Result;
+                    ViewData["location"] = JsonSerializer.Deserialize<Location>(HttpContext.Session.Get(SessionKeyLocation));
                     return View(item);
                 }
             }

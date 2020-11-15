@@ -27,7 +27,7 @@ namespace StoreWebUI
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.IdleTimeout = TimeSpan.FromSeconds(3600); //timeout in 1 hour
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });

@@ -7,33 +7,49 @@ using Microsoft.AspNetCore.Mvc;
 using StoreWebUI.Models;
 using System.Web;
 using System.Net.Http;
+using System.Text.Json;
 
 namespace StoreWebUI.Controllers
 {
-    //[Route("UserAccount")]
+    [Route("account")]
     public class CustomerController : Controller
     {
-        public const string SessionKeyUsername = "_Username";
-        
+        public const string SessionKeyCustomer = "CurrentCustomer";
+        public const string SessionKeyCart = "CurrentCart";
+
+        [Route("index")]
         public ActionResult Index()
         {
-            var username = HttpContext.Session.Get(SessionKeyUsername);
-            ViewData["Username"] = username;
+            if (HttpContext.Session.IsAvailable && HttpContext.Session.Get(SessionKeyCustomer)!=null)
+            {
+                var customer = HttpContext.Session.Get(SessionKeyCustomer);
+                string username = JsonSerializer.Deserialize<Customer>(customer).UserName;
+                ViewData["Username"] = username;
+                ViewData["IsLoggedIn"] = true;
+            }
+            else
+            { 
+                ViewData["IsLoggedIn"] = false;
+                return RedirectToAction("Login");
+            }
+
             return View(ViewData);
         }
 
-        [Route("login")]
+        [HttpGet]
         public ViewResult Login()
         {
-            Console.WriteLine("Going to login page.");
             return View();
         }
 
+        //[HttpGet]
         public IActionResult Login(Customer c)
         {
             string url = "https://localhost:44362/Customer/signin";
             using (var client = new HttpClient())
             {
+                //TODO: Input Validation for Username and Password
+
                 client.BaseAddress = new Uri(url);
                 var response = client.GetAsync($"?username={c.UserName}&password={c.Password}");
                 response.Wait();
@@ -45,12 +61,22 @@ namespace StoreWebUI.Controllers
                     readTask.Wait();
 
                     Customer customer = readTask.Result;
-                    HttpContext.Session.SetString(SessionKeyUsername, customer.UserName);
-                    return RedirectToAction("UserAccount/Index");
+                    HttpContext.Session.SetString(SessionKeyCustomer, JsonSerializer.Serialize(customer));
+                    return RedirectToAction("Index");
                 }
             }
-            Console.WriteLine("Failed to log in");
             return View();
+        }
+
+        [Route("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove(SessionKeyCustomer);
+            if (HttpContext.Session.Get(SessionKeyCart)!=null)
+            {
+                HttpContext.Session.Remove(SessionKeyCart);
+            }
+            return RedirectToAction("Login");
         }
 
     }

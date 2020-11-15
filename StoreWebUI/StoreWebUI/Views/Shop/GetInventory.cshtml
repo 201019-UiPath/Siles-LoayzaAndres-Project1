@@ -25,24 +25,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.ActionLink("View Details", "GetItem", new { locationId=item.LocationId, productId=item.ProductId })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) 
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.ActionLink("View Details", "GetItem", new { locationId=item.LocationId, productId=item.ProductId })
+                </td>
+            </tr>
+        }
+
+        @Html.ActionLink("Select Location", "SelectLocation")
     </tbody>
 </table>

@@ -32,6 +32,6 @@
 
 
 <div>
-    @Html.ActionLink("Add to Cart", "Cart/AddToCart", Model) |
-    <a asp-action="GetInventory">Back to List</a>
+    @Html.ActionLink("Add to Cart", "AddToCart", "Cart", Model) |
+    @Html.ActionLink("Back to Inventory", "GetInventory", ViewData["location"])
 </div>

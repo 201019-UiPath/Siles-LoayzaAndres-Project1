@@ -11,6 +11,8 @@ namespace StoreWebUI.Models
     /// </summary>
     public class Customer
     {
+        [Key]
+        public int Id { get; set; }
         /// <summary>
         /// Username for this Customer. Should be unique.
         /// </summary>
