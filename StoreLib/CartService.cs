@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Serilog;
 using StoreDB;
 using StoreDB.Models;
 
@@ -23,13 +24,22 @@ namespace StoreLib
 
         public void AddToCart(CartItem item)
         {
-            if (repo.HasCartItem(item))
+            try 
             {
-                repo.GetCartItem(item.CartId, item.ProductId).Quantity += item.Quantity;
+                if (repo.HasCartItem(item))
+                {
+                    repo.GetCartItem(item.CartId, item.ProductId).Quantity += item.Quantity;
+                }
+                else
+                {
+                    repo.AddCartItem(item);
+                }
+                Log.Information($"Added {item.Quantity} of {item.Product.Name} to cart {item.CartId}.");
             }
-            else
+            catch (Exception)
             {
-                repo.AddCartItem(item);
+                Log.Warning($"Failed to add {item.Product.Name} to cart.");
+                throw;
             }
         }
 
@@ -42,12 +52,14 @@ namespace StoreLib
                 cart.CustomerId = customerId;
                 cart.Items = new List<CartItem>();
                 repo.AddCart(cart);
+                Log.Information($"Created new cart at location {locationId} for customer {customerId}.");
             }
         }
 
         public void EmptyCart(int cartId)
         {
             repo.EmptyCart(cartId);
+            Log.Information($"Emptied cart {cartId}.");
         }
 
         public Cart GetCart(int customerId, int locationId)
@@ -93,6 +105,7 @@ namespace StoreLib
             }
             order.Cost = GetCost(cart.Id);
             repo.PlaceOrderTransaction(order.LocationId, cart.Id, order);
+            Log.Information($"Placed new order for customer {order.CustomerId} at location {order.LocationId}.");
         }
 
         public Order PlaceOrder(int customerId, int locationId, Address returnAdd, Address destAdd)
@@ -116,6 +129,7 @@ namespace StoreLib
             }
             order.Cost = GetCost(cart.Id);
             repo.PlaceOrderTransaction(locationId, cart.Id, order);
+            Log.Information($"Placed new order for customer {customerId} at location {locationId}.");
 
             return order;
         }
@@ -123,6 +137,7 @@ namespace StoreLib
         public void RemoveCartItem(CartItem cartItem)
         {
             repo.RemoveCartItem(cartItem);
+            Log.Information($"Removed item {cartItem.Product.Name} from cart {cartItem.CartId}.");
         }
     }
 }

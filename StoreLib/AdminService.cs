@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Serilog;
 using StoreDB;
 using StoreDB.Models;
 
@@ -16,6 +17,7 @@ namespace StoreLib
         public void AddLocation(Location location)
         {
             repo.AddLocation(location);
+            Log.Information($"Created new location {location.Name}");
         }
 
         public void AddNewProductToInventory(int locationId, InvItem invItem)
@@ -24,16 +26,18 @@ namespace StoreLib
             if (!LocationHasItem(locationId, invItem.ProductId))
             {
                 repo.AddInvItem(invItem);
+                Log.Information($"Added new product {invItem.Product.Name} to location {locationId}.");
             }
             else
             {
-                System.Console.WriteLine("Error! Product already exists!");
+                Log.Warning($"Failed to add new product {invItem.Product.Name} to location {locationId}.");
             }
         }
 
         public void AddToInvItem(int locationId, int productId, int addend)
         {
             repo.AddToInvItemQuantity(locationId, productId, addend);
+            Log.Information($"Added quantity {addend} to product {productId} at location {locationId}.");
         }
 
         public List<Order> GetOrdersByDateAscend(int locationId)
