@@ -42,7 +42,7 @@ namespace StoreAPI.Controllers
             try
             {
                 _cartService.AddToCart(cartItem);
-                return CreatedAtAction("AddToCart", cartItem);
+                return StatusCode(201);
             }
             catch (Exception e)
             {
@@ -56,7 +56,7 @@ namespace StoreAPI.Controllers
             try
             {
                 _cartService.EmptyCart(cartId);
-                return AcceptedAtAction("Empty");
+                return StatusCode(204);
             }
             catch (Exception)
             {
@@ -84,7 +84,7 @@ namespace StoreAPI.Controllers
             try
             {
                 _cartService.RemoveCartItem(cartItem);
-                return AcceptedAtAction("RemoveItem");
+                return StatusCode(204);
             }
             catch (Exception)
             {
@@ -98,7 +98,7 @@ namespace StoreAPI.Controllers
             try
             {
                 _cartService.PlaceOrder(order);
-                return AcceptedAtAction("PlaceOrder");
+                return StatusCode(201);
             }
             catch (Exception e)
             {

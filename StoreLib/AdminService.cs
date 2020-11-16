@@ -26,11 +26,11 @@ namespace StoreLib
             if (!LocationHasItem(locationId, invItem.ProductId))
             {
                 repo.AddInvItem(invItem);
-                Log.Information($"Added new product {invItem.Product.Name} to location {locationId}.");
+                Log.Information($"Added new product {invItem.ProductId} to location {locationId}.");
             }
             else
             {
-                Log.Warning($"Failed to add new product {invItem.Product.Name} to location {locationId}.");
+                Log.Warning($"Failed to add new product {invItem.ProductId} to location {locationId}.");
             }
         }
 

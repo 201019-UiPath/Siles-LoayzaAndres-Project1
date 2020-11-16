@@ -34,11 +34,11 @@ namespace StoreLib
                 {
                     repo.AddCartItem(item);
                 }
-                Log.Information($"Added {item.Quantity} of {item.Product.Name} to cart {item.CartId}.");
+                Log.Information($"Added {item.Quantity} of {item.ProductId} to cart {item.CartId}.");
             }
             catch (Exception)
             {
-                Log.Warning($"Failed to add {item.Product.Name} to cart.");
+                Log.Warning($"Failed to add {item.ProductId} to cart.");
                 throw;
             }
         }
@@ -137,7 +137,7 @@ namespace StoreLib
         public void RemoveCartItem(CartItem cartItem)
         {
             repo.RemoveCartItem(cartItem);
-            Log.Information($"Removed item {cartItem.Product.Name} from cart {cartItem.CartId}.");
+            Log.Information($"Removed item {cartItem.ProductId} from cart {cartItem.CartId}.");
         }
     }
 }
