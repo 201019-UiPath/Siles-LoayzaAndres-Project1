@@ -202,5 +202,177 @@ namespace StoreTest
             //Assert
             Assert.Equal(30, assertContext.InvItems.First().Quantity); //50-20=30
         }
+
+        [Fact]
+        private void AddToInvItemQuantityShouldAdd()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("AddToInvItemQuantityShouldAdd").Options;
+            using var testContext = new StoreContext(options);
+            testContext.InvItems.Add(new InvItem()
+            {
+                Product= testProduct,
+                ProductId=1,
+                LocationId=1,
+                Price=5,
+                Quantity=10
+            });
+            testContext.SaveChanges();
+
+            //Act
+            using var assertContext = new StoreContext(options);
+            repo = new DBRepo(assertContext);
+            repo.AddToInvItemQuantity(1, 1, 10);
+
+            //Assert
+            Assert.Equal(20, assertContext.InvItems.First().Quantity);
+        }
+
+        [Fact]
+        private void HasCustomerShouldWork()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("HasCustomerShouldWork").Options;
+            using var testContext = new StoreContext(options);
+            testContext.Customers.Add(new Customer(){
+                UserName = "milhouse",
+                Password = "password"
+            });
+            testContext.SaveChanges();
+
+            //Act and Assert
+            using var assertContext = new StoreContext(options);
+            repo = new DBRepo(assertContext);
+            Assert.True(repo.HasCustomer("milhouse"));
+        }
+
+        [Fact]
+        private void HasCartItemShouldWork()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("HasCartItemShouldWork").Options;
+            using var testContext = new StoreContext(options);
+            CartItem item = new CartItem(){
+                CartId=1,
+                ProductId=1,
+                Product=testProduct,
+                Price =5,
+                Quantity=3
+            };
+            testContext.CartItems.Add(item);
+            testContext.SaveChanges();
+
+            //Act and Assert
+            using var assertContext = new StoreContext(options);
+            repo = new DBRepo(assertContext);
+            Assert.True(repo.HasCartItem(item));
+        }
+
+        [Fact]
+        private void HasCartShouldWork()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("HasCartShouldWork").Options;
+            using var testContext = new StoreContext(options);
+            Cart cart = new Cart(){
+                CustomerId=1,
+                LocationId=1
+            };
+            testContext.Carts.Add(cart);
+            testContext.SaveChanges();
+
+            //Act and Assert
+            using var assertContext = new StoreContext(options);
+            repo = new DBRepo(assertContext);
+            Assert.True(repo.HasCart(1, 1));
+        }
+
+        [Fact]
+        private void GetOrdersAscendGetsOrderAscend()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("GetOrdersAscGetsOrdersAsc").Options;
+            using var testContext = new StoreContext(options);
+            testContext.Orders.Add(new Order(){
+                LocationId=1, CustomerId=1,
+                CreationTime= new System.DateTime(2020, 1, 1), //newest
+                Cost=10
+            });
+            testContext.Orders.Add(new Order(){
+                LocationId=1, CustomerId=1,
+                CreationTime= new System.DateTime(1997, 1, 1), //oldest
+                Cost=10
+            });
+            testContext.Orders.Add(new Order(){
+                LocationId=1, CustomerId=1,
+                CreationTime= new System.DateTime(2003, 1, 1),
+                Cost=10
+            });
+            testContext.SaveChanges();
+
+            //Act
+            using var assertContext = new StoreContext(options);
+            repo = new DBRepo(assertContext);
+            List<Order> orders = repo.GetOrdersAscend((x => x.CustomerId==1), (x => x.CreationTime));
+
+            //Assert
+            Assert.Equal(new System.DateTime(1997, 1, 1), orders.First().CreationTime);
+        }
+
+        [Fact]
+        private void GetOrdersDescendGetsOrderDescend()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("GetOrdersDescGetsOrdersDesc").Options;
+            using var testContext = new StoreContext(options);
+            testContext.Orders.Add(new Order(){
+                LocationId=1, CustomerId=1,
+                CreationTime= new System.DateTime(1997, 1, 1), //oldest
+                Cost=10
+            });
+            testContext.Orders.Add(new Order(){
+                LocationId=1, CustomerId=1,
+                CreationTime= new System.DateTime(2020, 1, 1), //newest
+                Cost=10
+            });
+            testContext.Orders.Add(new Order(){
+                LocationId=1, CustomerId=1,
+                CreationTime= new System.DateTime(2003, 1, 1),
+                Cost=10
+            });
+            testContext.SaveChanges();
+
+            //Act
+            using var assertContext = new StoreContext(options);
+            repo = new DBRepo(assertContext);
+            List<Order> orders = repo.GetOrdersDescend((x => x.CustomerId==1), (x => x.CreationTime));
+
+            //Assert
+            Assert.Equal(new System.DateTime(2020, 1, 1), orders.First().CreationTime);
+        }
+
+        [Fact]
+        private void GetInvItemIncludesProduct()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<StoreContext>().UseInMemoryDatabase("GetInvItemIncludesProduct").Options;
+            using var testContext = new StoreContext(options);
+            testContext.InvItems.Add(new InvItem(){
+                LocationId=1,
+                ProductId=1,
+                Product=testProduct,
+                Price=5,
+                Quantity=10
+            });
+            testContext.SaveChanges();
+
+            //Act
+            using var assertContext = new StoreContext(options);
+            repo = new DBRepo(assertContext);
+            InvItem item = repo.GetInvItem(1, 1);
+
+            //Assert
+            Assert.NotNull(item.Product);
+        }
     }
 }
