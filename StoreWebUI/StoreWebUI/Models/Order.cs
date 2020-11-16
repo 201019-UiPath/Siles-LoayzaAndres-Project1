@@ -27,16 +27,15 @@ namespace StoreWebUI.Models
         /// <summary>
         /// Address for the Location associated with this Order.
         /// </summary>
-        [Required]
         public Address ReturnAddress {get; set;}
         /// <summary>
         /// Address for the Customer associated with this Order.
         /// </summary>
-        [Required]
         public Address DestinationAddress {get; set;}
         /// <summary>
         /// Date and time that this Order was placed.
         /// </summary>
+        [Display(Name ="Date and Time")]
         public DateTime CreationTime {get; set;}
         /// <summary>
         /// List of products that this Order contains.

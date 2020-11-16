@@ -93,12 +93,12 @@ namespace StoreDB
 
         public List<Location> GetLocations()
         {
-            return context.Locations.Select(x => x).ToList();
+            return context.Locations.Include("Address").Select(x => x).ToList();
         }
 
         public List<Order> GetOrdersAscend(Func<Order, bool> where, Func<Order, Object> orderBy)
         {
-            return context.Orders.Include("CustomerAddress")
+            return context.Orders.Include("DestinationAddress")
                                  .Where(where)
                                  .OrderBy(orderBy)
                                  .ToList();
@@ -106,7 +106,7 @@ namespace StoreDB
 
         public List<Order> GetOrdersDescend(Func<Order, bool> where, Func<Order, Object> orderBy)
         {
-            return context.Orders.Include("CustomerAddress")
+            return context.Orders.Include("DestinationAddress")
                                  .Where(where)
                                  .OrderByDescending(orderBy)
                                  .ToList();
@@ -160,6 +160,12 @@ namespace StoreDB
         public void RemoveCartItem(CartItem item)
         {
             context.CartItems.Remove(item);
+            context.SaveChanges();
+        }
+
+        public void AddToInvItemQuantity(int locationId, int productId, int addend)
+        {
+            GetInvItem(locationId, productId).Quantity += addend;
             context.SaveChanges();
         }
     }

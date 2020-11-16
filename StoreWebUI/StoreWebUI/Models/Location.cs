@@ -20,6 +20,7 @@ namespace StoreWebUI.Models
         /// <summary>
         /// Address for this Location.
         /// </summary>
+        [Required]
         public Address Address {get; set;}
 
         /// <summary>

@@ -27,12 +27,10 @@ namespace StoreDB.Models
         /// <summary>
         /// Address for the Location associated with this Order.
         /// </summary>
-        [Required]
         public Address ReturnAddress {get; set;}
         /// <summary>
         /// Address for the Customer associated with this Order.
         /// </summary>
-        [Required]
         public Address DestinationAddress {get; set;}
         /// <summary>
         /// Date and time that this Order was placed.

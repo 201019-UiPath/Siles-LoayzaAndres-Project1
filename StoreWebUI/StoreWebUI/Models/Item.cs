@@ -33,6 +33,7 @@ namespace StoreWebUI.Models
         /// </summary>
         /// <value></value>
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Must be a positive integer.")]
         public int Quantity {get; set;}
     }
 }

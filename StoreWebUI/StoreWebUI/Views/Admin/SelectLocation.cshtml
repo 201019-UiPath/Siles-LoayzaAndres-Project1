@@ -1,0 +1,41 @@
+﻿@model IEnumerable<StoreWebUI.Models.Location>
+
+@{
+    ViewData["Title"] = "Locations";
+}
+
+<h1>Select a Location</h1>
+
+<!--
+<p>
+    <a asp-action="AddLocation">Create New Location</a>
+</p> -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Get Inventory", "GetInventory", new { Id = item.Id, Name = item.Name, Address = item.Address })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

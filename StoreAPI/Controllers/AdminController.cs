@@ -40,7 +40,7 @@ namespace StoreAPI.Controllers
             try
             {
                 _adminService.AddNewProductToInventory(locationId, item);
-                return CreatedAtAction("AddProduct", item);
+                return StatusCode(201);
             }
             catch (Exception e)
             {
@@ -64,7 +64,7 @@ namespace StoreAPI.Controllers
 
         [HttpGet("GetOrders")]
         [Produces("application/json")]
-        public IActionResult GetOrders (int locationId, string orderby, string orderdir)
+        public IActionResult GetOrders (int locationId, string orderby="date", string orderdir="desc")
         {
             try
             {

@@ -50,7 +50,6 @@ namespace StoreAPI.Controllers
             }
         }
 
-
         [HttpDelete("Empty")]
         public IActionResult EmptyCart(int cartId)
         {
@@ -99,7 +98,7 @@ namespace StoreAPI.Controllers
             try
             {
                 _cartService.PlaceOrder(order);
-                return CreatedAtAction("PlaceOrder", order);
+                return AcceptedAtAction("PlaceOrder");
             }
             catch (Exception e)
             {

@@ -1,19 +1,21 @@
 ﻿@model StoreWebUI.Models.Customer
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Signup";
 }
 
-<h1>Login</h1>
+<h1>Signup</h1>
 
+<h4>User Account</h4>
 <hr />
-@if(ViewData["SignUpSuccess"]!=null)
+
+@if((bool)ViewData["SignUpFailed"])
 {
-    <p>Sign up successful!</p>
+    <p>Failed to sign up. Try again.</p>
 }
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Login">
+        <form asp-action="SignupCustomer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
@@ -26,13 +28,15 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
+                <input type="submit" value="Signup!" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-@Html.ActionLink("Signup", "Signup")
+<div>
+    <a asp-action="Login">Back to Login</a>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

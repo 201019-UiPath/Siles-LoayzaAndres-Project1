@@ -72,7 +72,6 @@ namespace StoreWebUI.Controllers
                     readTask.Wait();
 
                     List<InvItem> inventory = readTask.Result;
-
                     HttpContext.Session.SetString(SessionKeyLocation, JsonSerializer.Serialize(location));
                     ViewData["LocationName"] = location.Name;
                     return View(inventory);

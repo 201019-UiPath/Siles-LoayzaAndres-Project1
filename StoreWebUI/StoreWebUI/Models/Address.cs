@@ -16,16 +16,19 @@ namespace StoreWebUI.Models
         /// Street address.
         /// </summary>
         [Required]
+        [DataType(DataType.Text)]
         public string Street {get; set;}
         /// <summary>
         /// City.
         /// </summary>
         [Required]
+        [DataType(DataType.Text)]
         public string City {get; set;}
         /// <summary>
         /// Zip code.
         /// </summary>
         /// <value></value>
+        [DataType(DataType.PostalCode)]
         public int Zip {get; set;}
         /// <summary>
         /// State or territory.

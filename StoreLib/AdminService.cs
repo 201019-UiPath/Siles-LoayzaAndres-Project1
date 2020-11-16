@@ -33,7 +33,7 @@ namespace StoreLib
 
         public void AddToInvItem(int locationId, int productId, int addend)
         {
-            GetInvItem(locationId, productId).Quantity += addend;
+            repo.AddToInvItemQuantity(locationId, productId, addend);
         }
 
         public List<Order> GetOrdersByDateAscend(int locationId)

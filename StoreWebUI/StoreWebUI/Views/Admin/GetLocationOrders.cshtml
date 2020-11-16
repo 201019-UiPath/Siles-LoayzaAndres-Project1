@@ -1,0 +1,58 @@
+﻿@model IEnumerable<StoreWebUI.Models.Order>
+
+@{
+    ViewData["Title"] = "View Location Orders";
+}
+
+<h1>Viewing Orders for @ViewData["LocationName"]</h1>
+
+<p>
+    @Html.ActionLink("Order By Date Ascending", "GetLocationOrdersByOrder", new { orderby = "date", orderdir = "asc" }) |
+    @Html.ActionLink("Order By Date Descending", "GetLocationOrdersByOrder", new { orderby = "date", orderdir = "desc" }) |
+    @Html.ActionLink("Order By Cost Ascending", "GetLocationOrdersByOrder", new { orderby = "cost", orderdir = "asc" }) |
+    @Html.ActionLink("Order By Cost Descending", "GetLocationOrdersByOrder", new { orderby = "cost", orderdir = "desc" }) |
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocationId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

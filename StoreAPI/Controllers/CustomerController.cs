@@ -42,7 +42,7 @@ namespace StoreAPI.Controllers
             try
             {
                 _customerService.SignUpNewCustomer(customer);
-                return CreatedAtAction("signUp", customer);
+                return AcceptedAtAction("signup");
             }
             catch (Exception e)
             {
