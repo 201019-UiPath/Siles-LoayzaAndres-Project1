@@ -14,18 +14,13 @@ namespace StoreWebUI.Controllers
     [Route("account")]
     public class CustomerController : Controller
     {
-        public const string SessionKeyCustomer = "CurrentCustomer";
-        public const string SessionKeyCart = "CurrentCart";
-        private readonly string apiDomainName = "https://localhost:44362/";
 
         [Route("index")]
         public ActionResult Index()
         {
-            if (HttpContext.Session.IsAvailable && HttpContext.Session.Get(SessionKeyCustomer)!=null)
+            if (HttpContext.Session.HasCustomer())
             {
-                var customer = HttpContext.Session.Get(SessionKeyCustomer);
-                string username = JsonSerializer.Deserialize<Customer>(customer).UserName;
-                ViewData["Username"] = username;
+                ViewData["Username"] = HttpContext.Session.GetCustomer().UserName;
                 ViewData["IsLoggedIn"] = true;
             }
             else
@@ -45,27 +40,17 @@ namespace StoreWebUI.Controllers
 
         public IActionResult Login(Customer c)
         {
-            string url = "https://localhost:44362/Customer/signin";
-            using (var client = new HttpClient())
+            string request = $"Customer/signin?username={c.UserName}&password={c.Password}";
+            try
             {
-                //TODO: Input Validation for Username and Password
-
-                client.BaseAddress = new Uri(url);
-                var response = client.GetAsync($"?username={c.UserName}&password={c.Password}");
-                response.Wait();
-
-                var result = response.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<Customer>();
-                    readTask.Wait();
-
-                    Customer customer = readTask.Result;
-                    HttpContext.Session.SetString(SessionKeyCustomer, JsonSerializer.Serialize(customer));
-                    return RedirectToAction("Index");
-                }
+                Customer customer = StoreHttpClient.GetData<Customer>(request);
+                HttpContext.Session.SetCustomer(customer);
+                return RedirectToAction("Index");
             }
-            return View();
+            catch (HttpRequestException)
+            {
+                return View();
+            }
         }
 
         [Route("signup")]
@@ -78,20 +63,12 @@ namespace StoreWebUI.Controllers
         [Route("SignupCustomer")]
         public IActionResult SignupCustomer(Customer customer)
         {
-            string url = $"{apiDomainName}Customer/signup";
-            using (var client = new HttpClient())
+            string url = $"Customer/signup";
+            if (StoreHttpClient.PostDataAsJson<Customer>(url, customer))
             {
-                client.BaseAddress = new Uri(url);
-                var response = client.PostAsJsonAsync("", customer);
-                response.Wait();
-
-                var result = response.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    ViewData["SignUpFailed"] = false;
-                    ViewData["SignUpSuccess"] = true;
-                    return RedirectToAction("Login", ViewData);
-                }
+                ViewData["SignUpFailed"] = false;
+                ViewData["SignUpSuccess"] = true;
+                return RedirectToAction("Login", ViewData);
             }
             ViewData["SignUpFailed"] = true;
             return View();
@@ -100,10 +77,10 @@ namespace StoreWebUI.Controllers
         [Route("Logout")]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove(SessionKeyCustomer);
-            if (HttpContext.Session.Get(SessionKeyCart)!=null)
+            HttpContext.Session.RemoveCustomer();
+            if (HttpContext.Session.HasCart())
             {
-                HttpContext.Session.Remove(SessionKeyCart);
+                HttpContext.Session.RemoveCart();
             }
             return RedirectToAction("Login");
         }
@@ -111,54 +88,39 @@ namespace StoreWebUI.Controllers
         [HttpGet("ViewOrders")]
         public IActionResult ViewOrders()
         {
-            if (HttpContext.Session.Get(SessionKeyCustomer) == null)
+            if (!HttpContext.Session.HasCustomer())
             { return RedirectToAction("Login"); }//if not logged in, go to login
-            string url = $"{apiDomainName}Customer/GetOrders";
-            using (var client = new HttpClient())
+            Customer c = HttpContext.Session.GetCustomer();
+            string url = $"Customer/GetOrders?customerId={c.Id}";
+
+            try
             {
-                client.BaseAddress = new Uri(url);
-                Customer c = JsonSerializer.Deserialize<Customer>(HttpContext.Session.Get(SessionKeyCustomer));
-                var response = client.GetAsync($"?customerId={c.Id}");
-                response.Wait();
-
-                var result = response.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<List<Order>>();
-                    readTask.Wait();
-
-                    List<Order> orders = readTask.Result;
-                    return View(orders);
-                }
+                List<Order> orders = StoreHttpClient.GetData<List<Order>>(url);
+                return View(orders);
             }
-            return StatusCode(502); //bad gateway
+            catch (HttpRequestException)
+            {
+                return StatusCode(502); //bad gateway
+            }
         }
 
         [HttpGet("ViewOrdersByOrder")]
         public IActionResult ViewOrdersByOrder(string orderby, string orderdir)
         {
-            if (HttpContext.Session.Get(SessionKeyCustomer) == null)
-            { return RedirectToAction("Login"); } 
+            if (!HttpContext.Session.HasCustomer())
+            { return RedirectToAction("Login"); }
+            Customer c = HttpContext.Session.GetCustomer();
+            string url = $"Customer/GetOrders?customerId={c.Id}&orderby={orderby}&orderdir={orderdir}";
 
-            string url = $"{apiDomainName}Customer/GetOrders";
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri(url);
-                Customer customer = JsonSerializer.Deserialize<Customer>(HttpContext.Session.Get(SessionKeyCustomer));
-                var response = client.GetAsync($"?customerId={customer.Id}&orderby={orderby}&orderdir={orderdir}");
-                response.Wait();
-
-                var result = response.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<List<Order>>();
-                    readTask.Wait();
-
-                    List<Order> orders = readTask.Result;
-                    return View("ViewOrders", orders);
-                }
+                List<Order> orders = StoreHttpClient.GetData<List<Order>>(url);
+                return View("ViewOrders", orders);
             }
-            return StatusCode(502); //bad gateway
+            catch (HttpRequestException)
+            {
+                return StatusCode(502); //bad gateway
+            }
         }
 
     }
