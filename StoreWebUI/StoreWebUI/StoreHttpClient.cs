@@ -2,13 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace StoreWebUI
 {
     public static class StoreHttpClient
     {
-        private const string apiDomainName = "https://localhost:44362/";
+        private static string _apiDomainName;
+        public static string apiDomainName
+        {
+            get
+            {
+                if (_apiDomainName==null)
+                {
+                    string fileText = System.IO.File.ReadAllText("apiDomainName.json");
+                    string[] text = JsonSerializer.Deserialize<string[]>(fileText);
+                    _apiDomainName = text[0]+"/";
+                }
+                return _apiDomainName;
+            }
+        }
+
         private static HttpClient _client;
         public static HttpClient client
         {
