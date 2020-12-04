@@ -5,6 +5,10 @@ using StoreDB.Models;
 
 namespace StoreDB
 {
+    /// <summary>
+    /// DbContext extended for this application. Contains DbSets for the
+    /// object-oriented models.
+    /// </summary>
     public class StoreContext : DbContext
     {
         public DbSet<Location> Locations {get; set;}

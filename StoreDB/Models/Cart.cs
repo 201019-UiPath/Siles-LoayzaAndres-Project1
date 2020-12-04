@@ -12,6 +12,10 @@ namespace StoreDB.Models
     /// </summary>
     public class Cart
     {
+        /// <summary>
+        /// ID for this Cart.
+        /// </summary>
+        /// <value></value>
         [Key]
         public int Id {get; set;}
         /// <summary>
