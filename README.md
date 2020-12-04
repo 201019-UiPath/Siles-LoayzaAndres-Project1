@@ -46,6 +46,7 @@ To Clone: `git clone https://github.com/201019-UiPath/Siles-LoayzaAndres-Project
 * To run this project from Microsoft Visual Studio, follow these steps:
     * Open the **StoreApplicationAPI.sln** in VS and select *Start Without Debugging* from the Debug menu. This should start running the StoreAPI from a live server.
     * Open the **StoreWebUI.sln** in VS and select *Start Without Debugging* from the Debug menu. This will start the web client application.
+    * NOTE: after starting the API, you must ensure that the localhost port which provides the domain name for the server is replaced in the **apiDomainName.json** file of the StoreWebUI sub-project. Replace this value with whatever host the store API is running on your machine. This will ensure that the web client makes its HTTP requests to the correct server address.
 * From the web client application, you can use the web interface to manage user accounts, view inventory, place orders, and so on.
 
 ## License
