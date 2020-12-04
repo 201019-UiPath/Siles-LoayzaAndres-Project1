@@ -4,6 +4,8 @@
 
 An Asp.Net web application representing a fantasy dungeon-crawling store. Allows users to purchase silly adventuring gear such as swords, magic potions, and spellbooks.
 
+Uses the client-server model to provide a web UI and API for accessing store data in an online database.
+
 ## Technologies Used
 
 * C#
